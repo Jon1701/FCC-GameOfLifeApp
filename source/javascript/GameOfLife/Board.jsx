@@ -46,6 +46,26 @@ class Board extends React.Component {
     })
   }
 
+  scanner() {
+
+    var grid = this.state.grid.slice();
+
+    // Go through the grid.
+    for(var i=0; i<grid.length; i++) {
+
+      // Flip cell state
+      grid[i] = !grid[i];
+
+
+    }
+
+    // Update grid.
+    this.setState({
+      grid: grid
+    })
+
+  }
+
   // Component Render.
   render() {
 
@@ -85,8 +105,14 @@ class Board extends React.Component {
     }
 
     return (
-      <div className="board">
-        {rows}
+      <div>
+
+        <button onClick={this.scanner.bind(this)}>Begin</button>
+
+        <div className="board">
+          {rows}
+        </div>
+
       </div>
     )
 
