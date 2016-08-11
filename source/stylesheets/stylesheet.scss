@@ -1,6 +1,24 @@
+// Default cell style.
 .cell {
   border: solid 1px black;
+  background-color: #FFFFFF;
   width: 30px;
   height: 30px;
   display: inline-block;
+}
+
+// Change background when cell active.
+.cell-active {
+  background-color: #DC143C;
+}
+
+// Disable text selection.
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+                                  not supported by any browser */
 }
