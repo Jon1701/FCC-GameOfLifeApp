@@ -13,6 +13,18 @@ class Board extends React.Component {
     var nrows = 15;
     var ncols = 15;
 
+    // Create grid contents.
+    var grid = [];
+    for(var i=0; i<nrows; i++) { // Create nrows number of boolean false arrays and store them
+
+      // Create row of boolean false.
+      var row = Array.apply(null, Array(ncols)).map(Boolean.prototype.valueOf, false);
+
+      // Store row.
+      grid.push(row);
+    }
+
+
     // Initial state of the Board component.
     //
     // Sets the number of rows of the board.
@@ -23,22 +35,19 @@ class Board extends React.Component {
       nrows: nrows,
       ncols: ncols,
       capacity: nrows*ncols,
-      grid: Array.apply(null, Array(nrows*ncols)).map(Boolean.prototype.valueOf, false)
-
-      //Array.apply(null, {length: nrows*ncols}).map(Number.call, Number)
-
+      grid: grid
     }
 
   }
 
   // Callback function to update Board state grid array from the <Cell/> component.
-  handleGridUpdate(idx, value) {
+  handleGridUpdate(row, col, value) {
 
     // Get a copy of the grid.
     var grid = this.state.grid.slice();
 
     // Update the copy of the grid at index idx with value.
-    grid[idx] = value;
+    grid[row][col] = value;
 
     // Store updated grid.
     this.setState({
@@ -50,19 +59,23 @@ class Board extends React.Component {
 
     var grid = this.state.grid.slice();
 
-    // Go through the grid.
+    // Go through the rows.
     for(var i=0; i<grid.length; i++) {
 
-      // Flip cell state
-      grid[i] = !grid[i];
+      // Go through the columns.
+      for(var j=0; j<grid[i].length; j++) {
 
+        // Flip cell state
+        grid[i][j] = !grid[i][j];
 
-    }
+      };
+
+    };
 
     // Update grid.
     this.setState({
       grid: grid
-    })
+    });
 
   }
 
@@ -86,18 +99,14 @@ class Board extends React.Component {
     //
     // The first ncols slice belongs to row 1.
     // the second ncols slice belongs to row 2, and so on.
-    for(var i=0; i<this.state.nrows; i++) {
-
-      // Row start and end indices.
-      var rowStart = i*this.state.ncols;
-      var rowEnd = (i*this.state.ncols)+this.state.ncols;
+    for(var i=0; i<this.state.grid.length; i++) {
 
       // Store row components and pass props.
       rows.push(
         <Row
           key={i} // Component key.
           row={i} // Row index.
-          rowData={this.state.grid.slice(rowStart, rowEnd)} // Array slice of the row.
+          rowData={this.state.grid[i]} // Array slice of the row.
           update={this.handleGridUpdate.bind(this)} // Callback passed down to accept state updates from <Cell/>
         />
       );

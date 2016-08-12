@@ -13,14 +13,15 @@ class Cell extends React.Component {
 
   update() {
 
-    // Cell index in relation to the board grid.
-    var index = this.props.index;
+    // Get the index of this cell in relation to Board multidim array.
+    var row = this.props.row;
+    var col = this.props.col;
 
     // Current cell state..
     var cellState = this.props.contents;
 
     // Flip the state and send the update to the parent.
-    this.props.update(index, !cellState);
+    this.props.update(row, col, !cellState);
 
   }
 
@@ -37,9 +38,7 @@ class Cell extends React.Component {
     });
 
     return (
-      <div className={cellClasses} onClick={this.update.bind(this)}>
-        {String(this.props.contents)}
-      </div>
+      <div className={cellClasses} onClick={this.update.bind(this)}/>
     )
 
   }
