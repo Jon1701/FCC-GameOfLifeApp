@@ -160,6 +160,10 @@ class Board extends React.Component {
 
         // Index of origin cell.
         var originIdx = 4;
+        var origin = grid[i][j];
+
+        // Clear origin in scanRadius.
+        scanRadius.values[originIdx] = null;
 
         // Number of cells which are active/inactive in the scan radius.
         var numActiveCells = 0;
@@ -168,6 +172,9 @@ class Board extends React.Component {
         // Grid indices of the active/inactive cells.
         var idxActiveCells = [];
         var idxInactiveCells = [];
+
+        // Grid indices of dead cells.
+        var idxDeadCells = [];
 
         // Get the number of cells in the scan radius which are active/inactive.
         //
@@ -183,20 +190,38 @@ class Board extends React.Component {
           }
         }
 
-        // Case 1: Any live cell with fewer than two live neighbours dies,
-        // as if caused by under-population.
-        if (numActiveCells < 2) {
+        if (origin) {
 
-          // Flip cell state
-          gridCopy[i][j] = !grid[i][j];
+          // Case 1: Any live cell with fewer than two live neighbours dies,
+          // as if caused by under-population.
+          if (numActiveCells < 2) {
+            gridCopy[i][j] = false;
+
+            // Store the index of the dead cell.
+            idxDeadCells.push([i,j]);
+          }
+
+          // Case 2: Any live cell with two or three live neighbours lives on
+          // to the next generation.
+          if (numActiveCells == 2 || numActiveCells == 3) {
+            gridCopy[i][j] = true;
+          }
+
+          // Case 3: Any live cell with more than three live neighbours dies, as
+          // if by over-population.
+          if (numActiveCells > 3) {
+            gridCopy[i][j] = false;
+
+            // Store the index of the dead cell.
+            idxDeadCells.push([i,j]);
+          }
+
+        } else {
 
         }
 
 
-
-        //break;
       };
-      //break;
     };
 
     // Update grid.
