@@ -27,7 +27,7 @@ class Row extends React.Component {
           row={this.props.row} // Row index.
           col={i}              // Column index.
           contents={this.props.rowData[i]}  // Cell contents.
-          //update={this.props.update}  // Callback passed down to allow state chances from <Cell/>
+          update={this.props.update}  // Callback passed down to allow state chances from <Cell/>
         />
       )
     }

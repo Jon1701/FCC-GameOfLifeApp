@@ -40,7 +40,7 @@ class Cell extends React.Component {
     return (
       <div
         className={cellClasses}
-        //onClick={this.update.bind(this)}
+        onClick={this.update.bind(this)}
       />
     )
 

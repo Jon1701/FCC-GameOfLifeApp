@@ -10,11 +10,10 @@ class Board extends React.Component {
     super();
 
     // Set grid dimensions.
-    var nrows = 15;
-    var ncols = 15;
+    var nrows = 20;
+    var ncols = 40;
 
     // Create grid contents.
-    /*
     var grid = [];
     for(var i=0; i<nrows; i++) { // Create nrows number of boolean false arrays and store them
 
@@ -24,25 +23,6 @@ class Board extends React.Component {
       // Store row.
       grid.push(row);
     }
-    */
-
-    var grid = [
-      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-      [false, false, false, true, false, false, false, false, false, false, false, false, false, false, false],
-      [false, false, false, true, false, false, false, false, false, false, false, false, false, false, false],
-      [false, false, false, true, false, false, false, false, false, false, false, false, false, false, false],
-      [false, false, false, true, false, false, false, false, false, false, false, false, false, false, false],
-      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
-    ]
-
 
     // Initial state of the Board component.
     //
@@ -151,9 +131,6 @@ class Board extends React.Component {
     // Get a copy of the board.
     var grid = this.state.grid.slice();
 
-
-        console.log(grid)
-
     // Get a copy of the board which is to be modified for the next generation.
     var gridCopy = this.state.grid.slice();
 
@@ -231,7 +208,7 @@ class Board extends React.Component {
           key={i} // Component key.
           row={i} // Row index.
           rowData={this.state.grid[i]} // Array slice of the row.
-          //update={this.handleGridUpdate.bind(this)} // Callback passed down to accept state updates from <Cell/>
+          update={this.handleGridUpdate.bind(this)} // Callback passed down to accept state updates from <Cell/>
         />
       );
 
