@@ -20,8 +20,21 @@ class Cell extends React.Component {
     // Current cell state..
     var cellState = this.props.contents;
 
-    // Flip the state and send the update to the parent.
-    this.props.update(row, col, !cellState);
+    // New cell state.
+    var result = null;
+
+    // If the cell is either true or false, flip its value, and send it to
+    // the parent.
+    if (cellState == true || cellState == false) {
+      result = !cellState;
+    } else {
+
+      // If the cell is null, set it to true, and send it to parent.
+      result = true;
+    }
+
+    // Send the update to the parent.
+    this.props.update(row, col, result);
 
   }
 

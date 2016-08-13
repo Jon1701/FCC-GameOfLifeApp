@@ -5,36 +5,42 @@ import Row from './Row.jsx';
 
 class Board extends React.Component {
 
-  // Component Constructor.
-  constructor() {
-    super();
-
-    // Set grid dimensions.
-    var nrows = 20;
-    var ncols = 40;
+  // Function to create a multidimensional array to internally represent the
+  // board state.
+  createBlankMultidimArray(nrows, ncols) {
 
     // Create grid contents.
     var grid = [];
     for(var i=0; i<nrows; i++) { // Create nrows number of boolean false arrays and store them
 
       // Create row of boolean false.
-      var row = Array.apply(null, Array(ncols)).map(Boolean.prototype.valueOf, false);
+      var row = Array.apply(null, Array(ncols)).map(function() { return null; });
 
       // Store row.
       grid.push(row);
     }
 
+    return grid;
+  }
+
+  // Component Constructor.
+  constructor() {
+    super();
+
+    // Set grid dimensions.
+    var nrows = 20;
+    var ncols = 30;
+
+    // Create a multidimensional array to represent the board.
+    var grid = this.createBlankMultidimArray(nrows, ncols);
+
     // Initial state of the Board component.
-    //
-    // Sets the number of rows of the board.
-    // Sets the number of columns of the board.
-    // Sets the overall capacity of the board.
-    // Sets an array of size nrows*ncols with a default boolean value of false.
     this.state = {
-      nrows: nrows,
-      ncols: ncols,
-      capacity: nrows*ncols,
-      grid: grid
+      nrows: nrows,           // Sets the number of rows of the board.
+      ncols: ncols,           // Sets the number of columns of the board.
+      capacity: nrows*ncols,  // Sets the overall capacity of the board.
+      currentGeneration: 0,   // Keep track of the number of generations have passed.
+      grid: grid              // Internal representation of the board.
     }
 
   }
@@ -54,8 +60,12 @@ class Board extends React.Component {
     })
   }
 
+  // Function which goes through each cell on the board, and check the nearby
+  // neighbours if they fall into one of the four cases for the Game of Life
+  // algorithm and modifies the cell accordingly.
   scanner() {
 
+    // Function to get the number of live neighbours around grid[i][j].
     var getNumLiveNeighbours = function(grid, i, j) {
 
       // Keep track of the number of live neighbours.
@@ -180,6 +190,66 @@ class Board extends React.Component {
 
   }
 
+  // Function which fills the board with random cells.
+  randomBoard() {
+
+    // Clear the grid.
+    var grid = this.createBlankMultidimArray(this.state.nrows, this.state.ncols);
+
+    // Random number threshold.
+    var threshold = 0.20;
+
+    // Go through all cells of the board.
+    for(var i=0; i<grid.length; i++) {
+      for(var j=0; j<grid[i].length; j++) {
+
+        // Generate a random float between 0 and 1.
+        //
+        // If the number falls below threshold, set the grid cell to true.
+        if(Math.random() <= threshold) {
+          grid[i][j] = true;
+        }
+
+      }
+    }
+
+    // Send modified board to the state.
+    this.setState({
+      grid: grid,
+      currentGeneration: 0  // Reset generation counter.
+    });
+  }
+
+  // Function to reset the internal board state to a multidimensional array
+  // of nulls and generation counter to 0.
+  resetBoard() {
+
+    // Recreate a blank internal representation of the grid.
+    var grid = this.createBlankMultidimArray(this.state.nrows, this.state.ncols);
+
+    // Save changes to state.
+    this.setState({
+      grid: grid,           // Blank board.
+      currentGeneration: 0  // Reset generation counter.
+    });
+
+  }
+
+  // Helper function which increments the current generation count, and calls
+  // the function used to scan all the board cells and apply rules in the Game
+  // of Life.
+  nextGeneration() {
+
+    // Increment current generation count.
+    this.setState({
+      currentGeneration: this.state.currentGeneration + 1
+    })
+
+    // Game of Life algorithm.
+    this.scanner();
+
+  }
+
   // Component Render.
   render() {
 
@@ -215,9 +285,31 @@ class Board extends React.Component {
     }
 
     return (
-      <div>
+      <div className="app-container">
 
-        <button onClick={this.scanner.bind(this)}>Begin</button>
+        <div className="title">
+          <h1>The Game of Life</h1>
+        </div>
+
+        <div className="controls">
+
+          <div className="btn btn-green" onClick={this.nextGeneration.bind(this)}>
+            New Generation
+          </div>
+
+          <div className="btn btn-orange" onClick={this.randomBoard.bind(this)}>
+            Random State
+          </div>
+
+          <div className="btn btn-red" onClick={this.resetBoard.bind(this)}>
+            Reset
+          </div>
+
+        </div>
+
+        <div className="container-generation">
+          Generation: {this.state.currentGeneration}
+        </div>
 
         <div className="board">
           {rows}
