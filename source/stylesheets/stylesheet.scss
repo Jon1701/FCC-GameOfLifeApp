@@ -1,16 +1,74 @@
-// Default cell style.
-.cell {
-  border: solid 1px black;
-  background-color: #FFFFFF;
-  width: 30px;
-  height: 30px;
-  display: inline-block;
+$gray: #333333;
+$red: #DC143C;
+
+body {
+  font-size: 100%;
+  font-family: Arial, sans-serif;
+  color: $gray;
 }
 
-// Change background when cell active.
-.cell-active {
-  background-color: #DC143C;
+.app-container {
+  margin: 0 auto;
+  width: 700px;
 }
+
+.board {
+  margin: 0 auto;
+  text-align: center;
+
+  .row {
+    margin-top: 0px;
+    margin-bottom: -5px;
+  }
+
+  // Default cell style.
+  .cell {
+    border: solid 0.5px $gray;
+    background-color: #FFFFFF;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+  }
+
+  // Change background when cell active.
+  .cell-active {
+    background-color: $red;
+  }
+}
+
+
+
+.title {
+  text-align: center;
+}
+
+.controls {
+
+  width: 80%;
+  margin: 0 auto;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  text-align: center;
+
+}
+
+.container-generation {
+
+  width: 50%;
+  margin: 0 auto;
+
+  border-radius: 6px;
+  border: solid 1px gray;
+  padding: 10px 16px;
+  text-align: center;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+}
+
 
 // Disable text selection.
 .noselect {
@@ -22,3 +80,5 @@
   user-select: none;           /* Non-prefixed version, currently
                                   not supported by any browser */
 }
+
+@import '_buttons';
