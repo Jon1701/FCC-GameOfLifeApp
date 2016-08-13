@@ -14,6 +14,7 @@ class Board extends React.Component {
     var ncols = 15;
 
     // Create grid contents.
+    /*
     var grid = [];
     for(var i=0; i<nrows; i++) { // Create nrows number of boolean false arrays and store them
 
@@ -23,6 +24,24 @@ class Board extends React.Component {
       // Store row.
       grid.push(row);
     }
+    */
+
+    var grid = [
+      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      [false, false, false, true, false, false, false, false, false, false, false, false, false, false, false],
+      [false, false, false, true, false, false, false, false, false, false, false, false, false, false, false],
+      [false, false, false, true, false, false, false, false, false, false, false, false, false, false, false],
+      [false, false, false, true, false, false, false, false, false, false, false, false, false, false, false],
+      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+      [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+    ]
 
 
     // Initial state of the Board component.
@@ -212,7 +231,7 @@ class Board extends React.Component {
           key={i} // Component key.
           row={i} // Row index.
           rowData={this.state.grid[i]} // Array slice of the row.
-          update={this.handleGridUpdate.bind(this)} // Callback passed down to accept state updates from <Cell/>
+          //update={this.handleGridUpdate.bind(this)} // Callback passed down to accept state updates from <Cell/>
         />
       );
 
