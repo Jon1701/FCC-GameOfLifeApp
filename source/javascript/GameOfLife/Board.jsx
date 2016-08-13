@@ -57,174 +57,127 @@ class Board extends React.Component {
 
   scanner() {
 
-    var generateScanRadius = function(grid, i, j) {
-      // Get top-left value.
-      var item0 = null;
+    var getNumLiveNeighbours = function(grid, i, j) {
+
+      // Keep track of the number of live neighbours.
+      var numLiveNbrs = 0;
+
+      // Top-left value.
       try {
-        item0 = grid[i-1][j-1];
+        if (grid[i-1][j-1]) {
+          numLiveNbrs++;
+        };
       } catch(e) {
-        item0 = null;
       }
 
-      // Get top-middle value.
-      var item1 = null;
+      // Top-middle value.
       try {
-        item1 = grid[i][j-1];
+        if (grid[i][j-1]) {
+          numLiveNbrs++;
+        };
       } catch(e) {
-        item1 = null;
       }
 
-      // Get top-right value.
-      var item2 = null;
+      // Top-right value.
       try {
-        item2 = grid[i+1][j-1];
+        if (grid[i+1][j-1]) {
+          numLiveNbrs++;
+        };
       } catch(e) {
-        item2 = null;
       }
 
-      // Get middle-left value.
-      var item3 = null;
+      // Middle-left value.
       try {
-        item3 = grid[i-1][j];
+        if (grid[i-1][j]) {
+          numLiveNbrs++;
+        };
       } catch(e) {
-        item3 = null;
       }
 
-      // Get origin value.
-      var item4 = null;
+      // Middle-right value.
       try {
-        item4 = grid[i][j];
+        if (grid[i+1][j]) {
+          numLiveNbrs++;
+        };
       } catch(e) {
-        item4 = null;
       }
 
-      // Get middle-right value.
-      var item5 = null;
+      // Bottom-left value.
       try {
-        item5 = grid[i+1][j];
+        if (grid[i-1][j+1]) {
+          numLiveNbrs++;
+        };
       } catch(e) {
-        item5 = null;
       }
 
-      // Get bottom-left value.
-      var item6 = null;
+      // Bottom-middle value.
       try {
-        item6 = grid[i-1][j+1];
+        if (grid[i][j+1]) {
+          numLiveNbrs++;
+        };
       } catch(e) {
-        item6 = null;
       }
 
-      // Get bottom-middle value.
-      var item7 = null;
+      // Bottom-right value.
       try {
-        item7 = grid[i][j+1];
+        if (grid[i+1][j+1]) {
+          numLiveNbrs++;
+        };
       } catch(e) {
-        item7 = null;
       }
 
-      // Get bottom-right value.
-      var item8 = null;
-      try {
-        item8 = grid[i+1][j+1];
-      } catch(e) {
-        item8 = null;
-      }
-
-      // Scan radius.
-      var scanRadius = {
-        indices: [
-                    [i-1, j-1], [i, j-1], [i+1, j-1],
-                    [i-1, j  ], [i, j  ], [i+1, j  ],
-                    [i-1, j+1], [i, j+1], [i+1, j+1]
-                 ],
-        values: [item0, item1, item2, item3, item4, item5, item6, item7, item8]
-      }
-
-      return scanRadius;
+      return numLiveNbrs;
     }
 
+    // Get a copy of the board.
     var grid = this.state.grid.slice();
 
+
+        console.log(grid)
+
+    // Get a copy of the board which is to be modified for the next generation.
     var gridCopy = this.state.grid.slice();
 
-    // Go through the rows.
+    // Go through the entire board.
     for(var i=0; i<grid.length; i++) {
-
-      // Go through the columns.
       for(var j=0; j<grid[i].length; j++) {
 
-        // For the current cell, generate a scan radius.
+        // Check if the current cell is alive.
+        var isAlive = grid[i][j];
+
+        // Count number of live neighbours around the current cell.
+        var numLiveNbrs = getNumLiveNeighbours(grid, i, j);
+
+        // Apply Game of Life scenarios.
         //
-        // Look at the state of cells around the current cell.
-        var scanRadius = generateScanRadius(grid, i, j);
-
-        // Index of origin cell.
-        var originIdx = 4;
-        var origin = grid[i][j];
-
-        // Clear origin in scanRadius.
-        scanRadius.values[originIdx] = null;
-
-        // Number of cells which are active/inactive in the scan radius.
-        var numActiveCells = 0;
-        var numInactiveCells = 0;
-
-        // Grid indices of the active/inactive cells.
-        var idxActiveCells = [];
-        var idxInactiveCells = [];
-
-        // Grid indices of dead cells.
-        var idxDeadCells = [];
-
-        // Get the number of cells in the scan radius which are active/inactive.
-        //
-        // scanRadius.values is an array which consists of either undefined,
-        // true, or false.
-        for(var x=0; x<scanRadius.values.length; x++) {
-          if (scanRadius.values[x] === true) {
-            numActiveCells++;
-            idxActiveCells.push(scanRadius.indices[x]);
-          } else if (scanRadius.values[x] == false) {
-            numInactiveCells++;
-            idxInactiveCells.push(scanRadius.indices[x]);
-          }
+        // Any live cell with fewer than two live neighbours dies,
+        // as if caused by under-population.
+        if (isAlive && numLiveNbrs < 2) {
+          gridCopy[i][j] = false;
         }
 
-        if (origin) {
-
-          // Case 1: Any live cell with fewer than two live neighbours dies,
-          // as if caused by under-population.
-          if (numActiveCells < 2) {
-            gridCopy[i][j] = false;
-
-            // Store the index of the dead cell.
-            idxDeadCells.push([i,j]);
-          }
-
-          // Case 2: Any live cell with two or three live neighbours lives on
-          // to the next generation.
-          if (numActiveCells == 2 || numActiveCells == 3) {
-            gridCopy[i][j] = true;
-          }
-
-          // Case 3: Any live cell with more than three live neighbours dies, as
-          // if by over-population.
-          if (numActiveCells > 3) {
-            gridCopy[i][j] = false;
-
-            // Store the index of the dead cell.
-            idxDeadCells.push([i,j]);
-          }
-
-        } else {
-
+        // Any live cell with two or three live neighbours lives on to the
+        // next generation.
+        if (isAlive && (numLiveNbrs == 2 || numLiveNbrs == 3)) {
+          gridCopy[i][j] = true;
         }
 
+        // Any live cell with more than three live neighbours dies, as if by
+        // over-population.
+        if (isAlive && numLiveNbrs > 3) {
+          gridCopy[i][j] = false;
+        }
+
+        // Any dead cell with exactly three live neighbours becomes
+        // a live cell, as if by reproduction.
+        if (!isAlive && numLiveNbrs == 3) {
+          gridCopy[i][j] = true;
+        }
 
       };
     };
 
-    // Update grid.
+    // Replace existing grid state with the modified one.
     this.setState({
       grid: gridCopy
     });
